@@ -3,7 +3,8 @@ import requests
 endpoint = "http://localhost:8000/api/products/"
 
 data = {
-    "title": "product title"
+    "title": "product title",
+    "price": 15
 }
 
 get_response = requests.post(endpoint, json=data)
