@@ -1,3 +1,4 @@
+from requests import request
 from rest_framework import generics, permissions
 from api.mixins import StaffEditorPermissionMixin
 from products.models import Product
@@ -14,13 +15,16 @@ class ProductListCreateAPIView(generics.ListCreateAPIView, StaffEditorPermission
     serializer_class = ProductSerializer
 
     def perform_create(self, serializer):
-        print(serializer.validated_data)
         title = serializer.validated_data.get("title")
         content = serializer.validated_data.get("content") or None
         if content is None:
             content = "heres the product content"
         serializer.save(content=content)
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        request = self.request
+        return qs.filter(user=request.user)
 
 product_list_create_view = ProductListCreateAPIView.as_view()
 
