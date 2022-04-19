@@ -18,8 +18,8 @@ class ProductListCreateAPIView(generics.ListCreateAPIView, StaffEditorPermission
         title = serializer.validated_data.get("title")
         content = serializer.validated_data.get("content") or None
         if content is None:
-            content = "heres the product content"
-        serializer.save(content=content)
+            content = title
+        serializer.save(content=content, user=self.request.user)
 
     def get_queryset(self):
         qs = super().get_queryset()
