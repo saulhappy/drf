@@ -1,12 +1,16 @@
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 from products.models import Product
+from products.validators import unique_product_title
 
 
 class ProductSerializer(serializers.ModelSerializer):
     my_discount = serializers.SerializerMethodField(read_only=True)
     edit_url = serializers.SerializerMethodField(read_only=True)
-    url = serializers.HyperlinkedIdentityField(view_name="product-detail", lookup_field="pk")
+    url = serializers.HyperlinkedIdentityField(
+        view_name="product-detail", lookup_field="pk"
+    )
+    title = serializers.CharField(validators=[unique_product_title])
 
     class Meta:
         model = Product
@@ -27,7 +31,6 @@ class ProductSerializer(serializers.ModelSerializer):
         if request is None:
             return None
         return reverse("product-edit", kwargs={"pk": obj.id}, request=request)
-
 
     def get_my_discount(self, obj):
         try:
