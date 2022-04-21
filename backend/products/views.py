@@ -24,6 +24,9 @@ class ProductListCreateAPIView(generics.ListCreateAPIView, StaffEditorPermission
     def get_queryset(self):
         qs = super().get_queryset()
         request = self.request
+        user = self.request.user
+        if not user.is_authenticated:
+            return Product.objects.none()
         return qs.filter(user=request.user)
 
 product_list_create_view = ProductListCreateAPIView.as_view()
