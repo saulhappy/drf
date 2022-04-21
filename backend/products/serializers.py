@@ -37,3 +37,11 @@ class ProductSerializer(serializers.ModelSerializer):
             return obj.get_discount()
         except:
             return None
+
+    def validate_title(self, value):
+        qs = Product.objects.filter(title__iexact=value)
+        if qs.exists():
+            raise serializers.ValidationError(
+                f" From serializer: {value} already exists."
+            )
+        return value
