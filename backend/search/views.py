@@ -1,8 +1,8 @@
 from rest_framework import generics
 
-from backend.products.models import Product
+from products.models import Product
 
-from backend.products.serializers import ProductSerializer
+from products.serializers import ProductSerializer
 
 class SearchListView(generics.ListAPIView):
     queryset = Product.objects.all()
