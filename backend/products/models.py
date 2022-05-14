@@ -4,6 +4,7 @@ from django.db.models import Q
 
 
 User = settings.AUTH_USER_MODEL
+EXPENSIVE_PRODUCT_PRICE = 50
 
 
 class ProductQuerySet(models.QuerySet):
@@ -35,6 +36,9 @@ class Product(models.Model):
     is_public = models.BooleanField(default=True)
 
     objects = ProductManager()
+
+    def is_expensive_item(self):
+        return self.price > EXPENSIVE_PRODUCT_PRICE
 
     @property
     def sale_price(self):
