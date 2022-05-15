@@ -6,4 +6,5 @@ from products.models import Product
 
 @register(Product)
 class ProductIndex(AlgoliaIndex):
+    should_index = "is_expensive_item"
     fields = ["user", "title", "content", "price", "is_public"]
