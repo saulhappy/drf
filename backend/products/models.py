@@ -1,3 +1,4 @@
+from random import choice
 from django.conf import settings
 from django.db import models
 from django.db.models import Q
@@ -5,6 +6,7 @@ from django.db.models import Q
 
 User = settings.AUTH_USER_MODEL
 EXPENSIVE_PRODUCT_PRICE = 50
+PRODUCT_MODEL_TAGS = ["cereal", "chocolate", "candy"]
 
 
 class ProductQuerySet(models.QuerySet):
@@ -39,6 +41,9 @@ class Product(models.Model):
 
     def is_expensive_item(self):
         return self.price > EXPENSIVE_PRODUCT_PRICE
+
+    def get_random_model_tag(self):
+        return [choice(PRODUCT_MODEL_TAGS)]
 
     @property
     def sale_price(self):
