@@ -8,7 +8,9 @@ from search.client import perform_search
 
 class SearchListView(generics.GenericAPIView):
     def get(self, request, *args, **kwargs):
-        results = perform_search(query=request.GET.get("q"))
+        query = request.GET.get("q")
+        tag = request.GET.get("tag") or None
+        results = perform_search(query=query, tags=tag)
         if results:
             return Response(results)
         return Response("", status=400)
