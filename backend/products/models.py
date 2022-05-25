@@ -39,6 +39,9 @@ class Product(models.Model):
 
     objects = ProductManager()
 
+    def __str__(self):
+        return f"{self.title}"
+
     def is_expensive_item(self):
         return self.price > EXPENSIVE_PRODUCT_PRICE
 
