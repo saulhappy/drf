@@ -9,3 +9,8 @@ class ProductIndex(AlgoliaIndex):
     # should_index = "is_expensive_item"
     fields = ["user", "title", "content", "price", "is_public"]
     tags = 'get_random_model_tag'
+    settings = {
+        "searchableAttributes": ["title", "content"],
+        "attributesForFacetting": ["user", "is_public"],
+
+    }
