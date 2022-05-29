@@ -32,12 +32,17 @@ class ProductManager(models.Manager):
 
 class Product(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, default=1, null=True)
-    title = models.CharField(max_length=120)
+    title = models.CharField(max_length=120) # imagine we later want to call this "name", to the outside world, but want to leave it in the model...
     content = models.TextField(blank=True, null=True)
     price = models.DecimalField(max_digits=15, decimal_places=2, default=99.99)
     is_public = models.BooleanField(default=True)
 
     objects = ProductManager()
+
+    #exposes "title" as "name"
+    @property
+    def name(self):
+        return self.title
 
     def __str__(self):
         return f"{self.title}"
