@@ -7,10 +7,10 @@ from products.models import Product
 @register(Product)
 class ProductIndex(AlgoliaIndex):
     # should_index = "is_expensive_item"
-    fields = ["user", "title", "content", "price", "is_public"]
+    fields = ["user", "name", "content", "price", "is_public"]
     tags = 'get_random_model_tag'
     settings = {
-        "searchableAttributes": ["title", "content"],
+        "searchableAttributes": ["name", "content"],
         "attributesForFacetting": ["user", "is_public"],
 
     }
