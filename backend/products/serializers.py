@@ -14,7 +14,7 @@ class ProductSerializer(serializers.ModelSerializer):
         view_name="product-detail", lookup_field="pk"
     )
     # title = serializers.CharField(validators=[unique_product_title])
-    name = serializers.CharField(source="content")
+    name = serializers.CharField(source="title")
 
     class Meta:
         model = Product
