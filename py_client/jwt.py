@@ -1,6 +1,7 @@
 from dataclasses import dataclass
-import requests
-from getpass import getpass
+
+# import requests
+# from getpass import getpass
 import pathlib
 import json
 
@@ -72,3 +73,14 @@ class JWTClient:
             Run login process
             """
             self.perform_auth()
+
+    def get_headers(self, header_type=None):
+        """
+        Default headers for HTTP requests
+        including the JWT token
+        """
+        _type = header_type or self.header_type
+        token = self.access
+        if not token:
+            return {}
+        return {"Authorization": f"{_type} {token}"}
