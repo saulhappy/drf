@@ -1,6 +1,6 @@
 from dataclasses import dataclass
+import requests
 
-# import requests
 # from getpass import getpass
 import pathlib
 import json
@@ -84,3 +84,18 @@ class JWTClient:
         if not token:
             return {}
         return {"Authorization": f"{_type} {token}"}
+
+    def perform_auth(self):
+        """
+        Simple way to perform authentication
+        Without exposing password(s) during the
+        collection process.
+        """
+        endpoint = f"{self.base_endpoint}/token/"
+        username = input("What is your username?\n")
+        password = getpass("What is your password?\n")
+        r = requests.post(endpoint, json={"username": username, "password": password})
+        if r.status_code != 200:
+            raise Exception(f"Access not granted: {r.text}")
+        print("access granted")
+        self.write_creds(r.json())
