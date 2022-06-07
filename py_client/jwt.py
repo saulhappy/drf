@@ -99,3 +99,15 @@ class JWTClient:
             raise Exception(f"Access not granted: {r.text}")
         print("access granted")
         self.write_creds(r.json())
+
+    def write_creds(self, data:dict):
+        """
+        Store credentials as a local file
+        and update instance with correct
+        data.
+        """
+        if self.cred_path is not None:
+            self.access = data.get('access')
+            self.refresh = data.get('refresh')
+            if self.access and self.refresh:
+                self.cred_path.write_text(json.dumps(data))
