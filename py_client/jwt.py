@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 import requests
 
-# from getpass import getpass
+from getpass import getpass
 import pathlib
 import json
 
@@ -10,7 +10,7 @@ import json
 class JWTClient:
     """
     Use a dataclass decorator
-    to simply the class construction
+    to simplify the class construction
     """
 
     access: str = None
@@ -100,14 +100,26 @@ class JWTClient:
         print("access granted")
         self.write_creds(r.json())
 
-    def write_creds(self, data:dict):
+    def write_creds(self, data: dict):
         """
         Store credentials as a local file
         and update instance with correct
         data.
         """
         if self.cred_path is not None:
-            self.access = data.get('access')
-            self.refresh = data.get('refresh')
+            self.access = data.get("access")
+            self.refresh = data.get("refresh")
             if self.access and self.refresh:
                 self.cred_path.write_text(json.dumps(data))
+
+    def verify_token(self):
+        """
+        Simple method for verifying your
+        token data. This method only verifies
+        your `access` token. A 200 HTTP status
+        means success, anything else means failure.
+        """
+        data = {"token": f"{self.access}"}
+        endpoint = f"{self.base_endpoint}/token/verify/"
+        r = requests.post(endpoint, json=data)
+        return r.status_code == 200
