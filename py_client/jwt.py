@@ -123,3 +123,14 @@ class JWTClient:
         endpoint = f"{self.base_endpoint}/token/verify/"
         r = requests.post(endpoint, json=data)
         return r.status_code == 200
+
+    def clear_tokens(self):
+        """
+        Remove any/all JWT token data
+        from instance as well as stored
+        creds file.
+        """
+        self.access = None
+        self.refresh = None
+        if self.cred_path.exists():
+            self.cred_path.unlink()  # same as .remove()?
