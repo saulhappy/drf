@@ -134,3 +134,29 @@ class JWTClient:
         self.refresh = None
         if self.cred_path.exists():
             self.cred_path.unlink()  # same as .remove()?
+
+    def perform_refresh(self):
+        """
+        Refresh the access token by using the correct
+        auth headers and the refresh token.
+        """
+        print("Refreshing token.")
+        headers = self.get_headers()
+        data = {
+            "refresh": f"{self.refresh}"
+        }
+        endpoint = f"{self.base_endpoint}/token/refresh/" 
+        r = requests.post(endpoint, json=data, headers=headers)
+        if r.status_code != 200:
+            self.clear_tokens()
+            return False
+        refresh_data = r.json()
+        if not 'access' in refresh_data:
+            self.clear_tokens()
+            return False
+        stored_data = {
+            'access': refresh_data.get('access'),
+            'refresh': self.refresh
+        }
+        self.write_creds(stored_data)
+        return True
