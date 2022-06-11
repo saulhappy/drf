@@ -160,3 +160,18 @@ class JWTClient:
         }
         self.write_creds(stored_data)
         return True
+
+    def list(self, endpoint=None, limit=3):
+        """
+        Here is an actual api call to a DRF
+        View that requires our simplejwt Authentication
+        Working correctly.
+        """
+        headers = self.get_headers()
+        if endpoint is None or self.base_endpoint not in str(endpoint):
+            endpoint = f"{self.base_endpoint}/products/?limit={limit}" 
+        r = requests.get(endpoint, headers=headers) 
+        if r.status_code != 200:
+            raise Exception(f"Request not complete {r.text}")
+        data = r.json()
+        return data
