@@ -142,22 +142,17 @@ class JWTClient:
         """
         print("Refreshing token.")
         headers = self.get_headers()
-        data = {
-            "refresh": f"{self.refresh}"
-        }
-        endpoint = f"{self.base_endpoint}/token/refresh/" 
+        data = {"refresh": f"{self.refresh}"}
+        endpoint = f"{self.base_endpoint}/token/refresh/"
         r = requests.post(endpoint, json=data, headers=headers)
         if r.status_code != 200:
             self.clear_tokens()
             return False
         refresh_data = r.json()
-        if not 'access' in refresh_data:
+        if not "access" in refresh_data:
             self.clear_tokens()
             return False
-        stored_data = {
-            'access': refresh_data.get('access'),
-            'refresh': self.refresh
-        }
+        stored_data = {"access": refresh_data.get("access"), "refresh": self.refresh}
         self.write_creds(stored_data)
         return True
 
@@ -169,9 +164,31 @@ class JWTClient:
         """
         headers = self.get_headers()
         if endpoint is None or self.base_endpoint not in str(endpoint):
-            endpoint = f"{self.base_endpoint}/products/?limit={limit}" 
-        r = requests.get(endpoint, headers=headers) 
+            endpoint = f"{self.base_endpoint}/products/?limit={limit}"
+        r = requests.get(endpoint, headers=headers)
         if r.status_code != 200:
             raise Exception(f"Request not complete {r.text}")
         data = r.json()
         return data
+
+
+if __name__ == "__main__":
+    """
+    Here's Simple example of how to use our client above.
+    """
+
+    # this will either prompt a login process
+    # or just run with current stored data
+    client = JWTClient()
+
+    # simple instance method to perform an HTTP
+    # request to our /api/products/ endpoint
+    lookup_1_data = client.list(limit=5)
+    # We used pagination at our endpoint so we have:
+    results = lookup_1_data.get("results")
+    next_url = lookup_1_data.get("next")
+    print("First lookup result length", len(results))
+    if next_url:
+        lookup_2_data = client.list(endpoint=next_url)
+        results += lookup_2_data.get("results")
+        print("Second lookup result length", len(results))
